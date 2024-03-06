@@ -1,0 +1,5 @@
+package com.electronicvoting.entity;
+
+public class Electoral {
+
+}

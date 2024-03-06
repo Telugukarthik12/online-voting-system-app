@@ -1,0 +1,37 @@
+package com.electronicvoting.repository;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import com.electronicvoting.dto.ConstituencyWinner;
+import com.electronicvoting.entity.Candidate;
+
+@Repository
+public interface CandidateRepo extends JpaRepository<Candidate, Long> {
+
+	List<Candidate> findByConstituency(String consti);
+
+	Candidate findByCname(String candidateName);
+	
+	@Query("SELECT c FROM Candidate c WHERE  c.votes=(SELECT MAX(c2.votes)FROM Candidate c2)")
+    List<Candidate> findCandidatesWithHighestVotes();
+	
+	
+	
+	
+	
+	
+	
+	
+	@Query("SELECT NEW com.electronicvoting.dto(c.constituency,c.cname,c.party,c.votes"+
+	"FROM Candidate c "+
+			"WHERE(c.constituency, c.votes)IN"+
+			"(SELECT c2.constituency, MAX(c2.votes) FROM Candidate c2 GROUP BY c2.constituency)")
+	List<ConstituencyWinner> findWinnersPerConstituency();
+
+
+}

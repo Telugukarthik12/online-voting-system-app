@@ -1,0 +1,33 @@
+server:
+  port: 8094
+
+spring:
+  application:
+    name: apigateway
+  cloud:
+    gateway:
+      routes:
+        - id: service1-route
+          uri: lb://service1  # Load balanced URI for service1 registered with Eureka
+          predicates:
+            - Path=/service1/**
+        - id: service2-route
+          uri: lb://service2  # Load balanced URI for service2 registered with Eureka
+          predicates:
+            - Path=/service2/**
+  application:
+    name: apigateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8092/eureka
+  instance:
+    hostname: localhost
+    prefer-ip-address: false
